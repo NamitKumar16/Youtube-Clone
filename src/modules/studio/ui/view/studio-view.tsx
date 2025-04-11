@@ -1,5 +1,11 @@
+import { VideosSection } from "../sections/videos-section";
+
 const StudioView = () => {
-  return <div>Hello</div>;
+  return (
+    <div>
+      <VideosSection />
+    </div>
+  );
 };
 
 export default StudioView;
