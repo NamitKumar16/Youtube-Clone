@@ -1,10 +1,23 @@
 "use client";
 
+import { InfiniteScroll } from "@/components/infinite-scroll";
 import { DEFAULT_LIMIT } from "@/constants";
 import { trpc } from "@/trpc/client";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 export const VideosSection = () => {
-  const [data] = trpc.studio.getMany.useSuspenseInfiniteQuery(
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <ErrorBoundary fallback={<p>Error</p>}>
+        <VideosSectionSuspense />
+      </ErrorBoundary>
+    </Suspense>
+  );
+};
+
+const VideosSectionSuspense = () => {
+  const [data, query] = trpc.studio.getMany.useSuspenseInfiniteQuery(
     {
       limit: DEFAULT_LIMIT,
     },
@@ -13,5 +26,16 @@ export const VideosSection = () => {
     }
   );
 
-  return <div>{JSON.stringify(data)}</div>;
+  return (
+    <div>
+      {JSON.stringify(data)}
+
+      <InfiniteScroll
+        isManual={true}
+        hasNextPage={query.hasNextPage}
+        isFetchingNextPage={query.isFetchingNextPage}
+        fetchNextPage={query.fetchNextPage}
+      />
+    </div>
+  );
 };
