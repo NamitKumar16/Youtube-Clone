@@ -59,14 +59,14 @@ const VideosSectionSuspense = () => {
                   key={video.id}
                   legacyBehavior
                 >
-                  <TableRow className="cursor-pointer">
+                  <TableRow key={video?.id} className="cursor-pointer">
                     <TableCell>{video.title}</TableCell>
                     <TableCell>visibility</TableCell>
                     <TableCell>status</TableCell>
                     <TableCell>date</TableCell>
-                    <TableCell>views</TableCell>
-                    <TableCell>comments</TableCell>
-                    <TableCell>likes</TableCell>
+                    <TableCell className="text-right">views</TableCell>
+                    <TableCell className="text-right">comments</TableCell>
+                    <TableCell className="text-right pr-6">likes</TableCell>
                   </TableRow>
                 </Link>
               ))}
