@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { trpc } from "@/trpc/client";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { toast } from "sonner";
+import { StudioUploader } from "./studio-uploader";
 
 export const StudioUploadModal = () => {
   const utils = trpc.useUtils();
@@ -20,8 +21,18 @@ export const StudioUploadModal = () => {
   });
   return (
     <>
-      <ResponsiveModal open title="Upload a Video" onOpenChange={() => {}}>
-        <p>This will be an uploader</p>
+      <ResponsiveModal
+        open={!!create?.data?.url}
+        title="Upload a Video"
+        onOpenChange={() => {
+          create.reset();
+        }}
+      >
+        {create?.data?.url ? (
+          <StudioUploader endpoint={create?.data?.url} onSuccess={() => {}} />
+        ) : (
+          <Loader2Icon />
+        )}
       </ResponsiveModal>
       <Button
         variant={"secondary"}
