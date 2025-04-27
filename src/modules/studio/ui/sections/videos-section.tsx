@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DEFAULT_LIMIT } from "@/constants";
+import { VideoThumbnail } from "@/modules/videos/ui/components/video-thumbnail";
 import { trpc } from "@/trpc/client";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -60,7 +61,13 @@ const VideosSectionSuspense = () => {
                   legacyBehavior
                 >
                   <TableRow key={video?.id} className="cursor-pointer">
-                    <TableCell>{video.title}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-4">
+                        <div className="relative aspect-video shrink-0 w-36">
+                          <VideoThumbnail imageUrl={video.thumbnailUrl} />
+                        </div>
+                      </div>
+                    </TableCell>
                     <TableCell>visibility</TableCell>
                     <TableCell>status</TableCell>
                     <TableCell>date</TableCell>
