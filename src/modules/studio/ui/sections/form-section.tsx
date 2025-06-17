@@ -13,9 +13,12 @@ import {
   CopyCheckIcon,
   CopyIcon,
   Globe2Icon,
+  ImagePlusIcon,
   Link2,
   LockIcon,
   MoreVerticalIcon,
+  RotateCcwIcon,
+  SparklesIcon,
   TrashIcon,
 } from "lucide-react";
 import { Suspense, useState } from "react";
@@ -45,6 +48,8 @@ import VideoPlayer from "@/modules/videos/ui/components/video-player";
 import Link from "next/link";
 import { snakeCaseToTitle } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { THUMBNAIL_FALLBACK } from "@/modules/videos/types";
 
 interface FormSectionProps {
   videoId: string;
@@ -179,6 +184,51 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                       className="resize-none pr-10"
                       placeholder="Add a description to your video"
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="thumbnailUrl"
+              control={form.control}
+              render={() => (
+                <FormItem>
+                  <FormLabel>Thumbnail</FormLabel>
+                  <FormControl>
+                    <div className="p-0.5 border border-dashed border-neutral-400 relative h-[84px] w-[153px] group">
+                      <Image
+                        fill
+                        alt={"Thumbnail"}
+                        src={video.thumbnailUrl || THUMBNAIL_FALLBACK}
+                        className="object-cover"
+                      />
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            type="button"
+                            size="icon"
+                            className="bg-black/50 hover:bg-black/50 absolute top-1 right-1 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 duration-300 size-7"
+                          >
+                            <MoreVerticalIcon className="text-white" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" side="right">
+                          <DropdownMenuItem>
+                            <ImagePlusIcon className="mr-1 size-4" />
+                            Change
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <SparklesIcon className="mr-1 size-4" />
+                            AI-Generated
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <RotateCcwIcon className="mr-1 size-4" />
+                            Restore
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
