@@ -78,6 +78,16 @@ export const POST = async (request: Request) => {
 
       const utapi = new UTApi();
 
+      const existingVideo = await db
+        .select()
+        .from(videos)
+        .where(eq(videos.muxUploadId, data.upload_id))
+        .then((res) => res[0]);
+
+      if (existingVideo?.thumbnailUrl && existingVideo?.previewUrl) {
+        return new Response("Already handled", { status: 200 });
+      }
+
       const [uploadedThumbnail, uploadedPreview] =
         await utapi.uploadFilesFromUrl([tempThumbnailUrl, tempPreviewUrl]);
 
@@ -88,7 +98,7 @@ export const POST = async (request: Request) => {
       }
 
       const { key: thumbnailKey, url: thumbnailUrl } = uploadedThumbnail.data;
-      const { key: previewKey, url: previewUrl } = uploadedThumbnail.data;
+      const { key: previewKey, url: previewUrl } = uploadedPreview.data;
 
       const duration = data?.duration ? Math.round(data.duration * 1000) : 0;
 
