@@ -63,7 +63,7 @@ export const { POST } = serve(async (context) => {
     }
   });
 
-  const uploadedThumnail = await context.run("upload-thumbnail", async () => {
+  const uploadedThumbnail = await context.run("upload-thumbnail", async () => {
     const { data } = await utapi.uploadFilesFromUrl(tempThumbnailUrl);
 
     if (!data) {
@@ -73,14 +73,13 @@ export const { POST } = serve(async (context) => {
     return data;
   });
 
-  //   await context.run("update-video", async () => {
-  //     await db
-  //       .update(videos)
-  //       .set({
-  //         description: description || video.description,
-  //       })
-  //       .where(
-  //         and(eq(videos.id, (await video).id), eq(videos.userId, video.userId))
-  //       );
-  //   });
+  await context.run("update-video", async () => {
+    await db
+      .update(videos)
+      .set({
+        thumbnailKey: uploadedThumbnail.key,
+        thumbnailUrl: uploadedThumbnail.url,
+      })
+      .where(and(eq(videos.id, video.id), eq(videos.userId, video.userId)));
+  });
 });
