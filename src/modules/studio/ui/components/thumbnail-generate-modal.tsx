@@ -41,6 +41,8 @@ export const ThumbnailGenerateModal = ({
       prompt: values.prompt,
       id: videoId,
     });
+    form.reset();
+    onOpenChange(false);
   };
 
   const generateThumbnail = trpc.videos.generateThumbnail.useMutation({
@@ -86,10 +88,12 @@ export const ThumbnailGenerateModal = ({
               </FormItem>
             )}
           />
+          <div className="flex justify-end">
+            <Button type="submit" disabled={generateThumbnail.isPending}>
+              Generate
+            </Button>
+          </div>
         </form>
-        <div className="flex justify-end">
-          <Button type="submit">Generate</Button>
-        </div>
       </Form>
     </ResponsiveModal>
   );

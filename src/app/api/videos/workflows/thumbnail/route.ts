@@ -3,7 +3,7 @@ import { videos } from "@/db/schema";
 import { serve } from "@upstash/workflow/nextjs";
 import { and, eq } from "drizzle-orm";
 import { UTApi } from "uploadthing/server";
-
+import OpenAI from "openai";
 interface InputType {
   userId: string;
   videoId: string;
@@ -28,28 +28,25 @@ export const { POST } = serve(async (context) => {
     return existingVideo;
   });
 
-  const { body } = await context.call<{ data: { url: string }[] }>(
-    "generate-thumbnail",
-    {
-      url: "https://api.openai.com/v1/images/generations",
-      method: "POST",
-      body: {
-        prompt,
-        n: 1,
-        model: "dall-e-3",
-        size: "1792x1024",
-      },
-      headers: {
-        authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-    }
-  );
+  const client = new OpenAI({
+    baseURL: "https://api.studio.nebius.com/v1/",
+    apiKey: process.env.NEBIUS_API_KEY!,
+  });
 
-  const tempThumbnailUrl = body.data[0].url;
+  const response = await client.images.generate({
+    model: "black-forest-labs/flux-schnell",
+    prompt,
+    extra_body: {
+      width: 1792,
+      height: 1024,
+    },
+  } as unknown as Parameters<typeof client.images.generate>[0]);
 
-  if (!tempThumbnailUrl) {
-    throw new Error("Bad request");
+  if (!response.data?.[0]?.url) {
+    throw new Error("Thumbnail generation failed (no URL returned)");
   }
+
+  const tempThumbnailUrl = response?.data[0]?.url;
   await context.run("cleanup-thumbnail", async () => {
     if (video.thumbnailKey) {
       await utapi.deleteFiles(video.thumbnailKey);

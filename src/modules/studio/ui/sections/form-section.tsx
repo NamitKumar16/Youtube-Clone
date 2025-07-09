@@ -53,6 +53,7 @@ import Image from "next/image";
 import { THUMBNAIL_FALLBACK } from "@/modules/videos/types";
 import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal";
 import { ThumbnailGenerateModal } from "../components/thumbnail-generate-modal";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface FormSectionProps {
   videoId: string;
@@ -70,8 +71,63 @@ export const FormSection = ({ videoId }: FormSectionProps) => {
 
 const FormSectionSkeleton = () => {
   return (
-    <div>
-      <p>Loading...</p>
+    <div className="animate-pulse space-y-6">
+      <div className="flex items-center justify-between mb-6">
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-32" />
+          <Skeleton className="h-4 w-40" />
+        </div>
+        <div className="flex items-center gap-x-2">
+          <Skeleton className="h-10 w-20 rounded-md" />
+          <Skeleton className="h-10 w-10 rounded-full" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Left side (main form fields) */}
+        <div className="space-y-8 lg:col-span-3">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-[180px] w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-[84px] w-[153px] rounded-md" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+
+        {/* Right side (video preview and metadata) */}
+        <div className="flex flex-col gap-y-8 lg:col-span-2">
+          <div className="bg-[#F9F9F9] rounded-xl overflow-hidden h-fit">
+            <Skeleton className="aspect-video w-full" />
+            <div className="p-4 space-y-6">
+              {[...Array(3)].map((_, idx) => (
+                <div
+                  key={idx}
+                  className="flex justify-between items-center gap-x-2"
+                >
+                  <div className="space-y-1">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-4 w-48" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -178,7 +234,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
         videoId={videoId}
       />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mb-10">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-2xl font-bold">Video details</h1>
