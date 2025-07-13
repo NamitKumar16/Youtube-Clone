@@ -50,7 +50,7 @@ import Link from "next/link";
 import { snakeCaseToTitle } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { THUMBNAIL_FALLBACK } from "@/modules/videos/types";
+import { THUMBNAIL_FALLBACK } from "@/modules/videos/constants";
 import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal";
 import { ThumbnailGenerateModal } from "../components/thumbnail-generate-modal";
 import { Skeleton } from "@/components/ui/skeleton";
