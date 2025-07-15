@@ -4,6 +4,7 @@ import VideoDescription from "./video-description";
 import VideoMenu from "./video-menu";
 import VideoOwner from "./video-owner";
 import VideoReactions from "./video-reactions";
+import { format, formatDistanceToNow } from "date-fns";
 
 interface VideoTopRowProps {
   video: VideoGetOneOutput;
@@ -22,6 +23,14 @@ const VideoTopRow = ({ video }: VideoTopRowProps) => {
     }).format(1000);
   }, []);
 
+  const compactDate = useMemo(() => {
+    return formatDistanceToNow(video.createdAt, { addSuffix: true });
+  }, [video.createdAt]);
+
+  const expandedDate = useMemo(() => {
+    return format(video.createdAt, "d MMM yyyy");
+  }, [video.createdAt]);
+
   return (
     <div className="flex flex-col gap-4 mt-4">
       <h1 className="text-xl font-semibold">{video.title}</h1>
@@ -36,8 +45,8 @@ const VideoTopRow = ({ video }: VideoTopRowProps) => {
         description={video.description}
         compactViews={compactViews}
         expandedView={expandedViews}
-        compactDate="13/07/2025"
-        expandedDate="13th July, 2025"
+        compactDate={compactDate}
+        expandedDate={expandedDate}
       />
     </div>
   );
