@@ -8,6 +8,7 @@ interface VideoDescriptionProps {
   compactDate: string;
   expandedDate: string;
   description?: string | null;
+  viewCount: string | number;
 }
 
 const VideoDescription = ({
@@ -16,6 +17,7 @@ const VideoDescription = ({
   compactDate,
   expandedDate,
   expandedView,
+  viewCount,
 }: VideoDescriptionProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -28,7 +30,8 @@ const VideoDescription = ({
     >
       <div className="flex gap-2 text-sm mb-2">
         <span className="font-medium">
-          {isExpanded ? expandedView : compactViews} views
+          {isExpanded ? expandedView : compactViews}{" "}
+          {viewCount === 1 ? "view" : "views"}
         </span>
         <span className="font-medium">
           {isExpanded ? expandedDate : compactDate}
