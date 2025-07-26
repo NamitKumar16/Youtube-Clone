@@ -241,6 +241,10 @@ export const comments = pgTable("comments", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const commentInsertSchema = createInsertSchema(comments);
+export const commentSelectSchema = createSelectSchema(comments);
+export const commentUpdateSchema = createUpdateSchema(comments);
+
 export const commentRelations = relations(comments, ({ one }) => ({
   user: one(users, {
     fields: [comments.userId],
