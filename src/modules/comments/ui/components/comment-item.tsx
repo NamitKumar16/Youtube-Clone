@@ -1,35 +1,46 @@
 import Link from "next/link";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { trpc } from "@/trpc/client";
+import { formatDistanceToNow } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { useAuth, useClerk } from "@clerk/nextjs";
 import { CommentsGetManyOutput } from "../../types";
 import { UserAvatar } from "@/components/user-avatar";
-import { formatDistanceToNow } from "date-fns";
-import { trpc } from "@/trpc/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import {
+  ChevronDown,
+  ChevronUp,
   MessageSquareIcon,
   MoreVerticalIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useAuth, useClerk } from "@clerk/nextjs";
-import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { CommentForm } from "./comment-form";
 
 interface CommentItemProps {
   comment: CommentsGetManyOutput["items"][number];
+  variant?: "reply" | "comment";
 }
 
-export const CommentItem = ({ comment }: CommentItemProps) => {
+export const CommentItem = ({
+  comment,
+  variant = "comment",
+}: CommentItemProps) => {
   const { userId } = useAuth();
   const clerk = useClerk();
   const { user } = comment;
   const utils = trpc.useUtils();
+
+  const [isReplyOpen, setIsReplyOpen] = useState(false);
+  const [isRepliesOpen, setIsRepliesOpen] = useState(false);
 
   const remove = trpc.comments.remove.useMutation({
     onSuccess: () => {
@@ -84,7 +95,7 @@ export const CommentItem = ({ comment }: CommentItemProps) => {
               </span>
             </div>
           </Link>
-          <p>{comment.value}</p>
+          <p className="text-sm">{comment.value}</p>
           <div className="flex items-center gap-2 mt-1">
             <div className="flex items-center">
               <Button
@@ -120,6 +131,16 @@ export const CommentItem = ({ comment }: CommentItemProps) => {
                 {comment.dislikeCount}
               </span>
             </div>
+            {variant === "comment" && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8"
+                onClick={() => setIsReplyOpen(true)}
+              >
+                Reply
+              </Button>
+            )}
           </div>
         </div>
         <DropdownMenu>
@@ -129,10 +150,12 @@ export const CommentItem = ({ comment }: CommentItemProps) => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => {}}>
-              <MessageSquareIcon className="size-4" />
-              Reply
-            </DropdownMenuItem>
+            {variant === "comment" && (
+              <DropdownMenuItem onClick={() => setIsReplyOpen(true)}>
+                <MessageSquareIcon className="size-4" />
+                Reply
+              </DropdownMenuItem>
+            )}
             {comment.user.clerkId === userId && (
               <DropdownMenuItem
                 onClick={() => remove.mutate({ id: comment.id })}
@@ -144,6 +167,32 @@ export const CommentItem = ({ comment }: CommentItemProps) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      {isReplyOpen && variant === "comment" && (
+        <div className="mt-4 pl-14">
+          <CommentForm
+            videoId={comment.videoId}
+            variant="reply"
+            parentId={comment.id}
+            onCancel={() => setIsReplyOpen(false)}
+            onSuccess={() => {
+              setIsReplyOpen(false);
+              setIsRepliesOpen(true);
+            }}
+          />
+        </div>
+      )}
+      {comment.replyCount > 0 && variant === "comment" && (
+        <div className="pl-14">
+          <Button
+            variant="tertiary"
+            size="sm"
+            onClick={() => setIsRepliesOpen((current) => !current)}
+          >
+            {isRepliesOpen ? <ChevronUp /> : <ChevronDown />}
+            {comment.replyCount} replies
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
