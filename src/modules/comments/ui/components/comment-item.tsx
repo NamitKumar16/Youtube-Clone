@@ -24,6 +24,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { CommentForm } from "./comment-form";
+import CommentReplies from "./comment-replies";
 
 interface CommentItemProps {
   comment: CommentsGetManyOutput["items"][number];
@@ -82,7 +83,11 @@ export const CommentItem = ({
     <div>
       <div className="flex gap-4">
         <Link href={`/users/${comment.userId}`}>
-          <UserAvatar size="lg" imageUrl={user.imageUrl} name={user.name} />
+          <UserAvatar
+            size={variant === "comment" ? "lg" : "sm"}
+            imageUrl={user.imageUrl}
+            name={user.name}
+          />
         </Link>
         <div className="flex-1 min-w-0">
           <Link href={`/users/${comment.userId}`}>
@@ -192,6 +197,9 @@ export const CommentItem = ({
             {comment.replyCount} replies
           </Button>
         </div>
+      )}
+      {comment.replyCount > 0 && variant === "comment" && isRepliesOpen && (
+        <CommentReplies parentId={comment.id} videoId={comment.videoId} />
       )}
     </div>
   );
