@@ -5,11 +5,24 @@ import { useMemo } from "react";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import VideoMenu from "./video-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface VideoInfoProps {
   data: VideoGetManyOutput["items"][number];
   onRemove?: () => void;
 }
+
+export const VideoInfoSkeleton = () => {
+  return (
+    <div className="flex gap-3">
+      <Skeleton className="size-10 rounded-full flex-shrink-0" />
+      <div className="space-y-2 flex-1 min-w-0">
+        <Skeleton className="h-5 w-[90%]" />
+        <Skeleton className="h-5 w-[70%]" />
+      </div>
+    </div>
+  );
+};
 
 export const VideoInfo = ({ data, onRemove }: VideoInfoProps) => {
   const compactViews = useMemo(() => {
