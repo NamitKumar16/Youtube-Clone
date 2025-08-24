@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { APP_URL } from "@/constants";
 import { SearchIcon, XIcon } from "lucide-react";
@@ -51,6 +53,7 @@ export const SearchInput = () => {
       </div>
       <button
         type="submit"
+        disabled={!value.trim()}
         className="px-5 py-2.5 bg-gray-100 border border-l-0 rounded-r-full hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <SearchIcon className="size-5" />
