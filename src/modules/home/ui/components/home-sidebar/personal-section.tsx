@@ -13,11 +13,16 @@ import Link from "next/link";
 import { useAuth, useClerk } from "@clerk/nextjs";
 
 const items = [
-  { title: "History", icon: HistoryIcon, url: "/playlist/history", auth: true },
+  {
+    title: "History",
+    icon: HistoryIcon,
+    url: "/playlists/history",
+    auth: true,
+  },
   {
     title: "Liked Videos",
     icon: ThumbsUpIcon,
-    url: "/playlist/liked",
+    url: "/playlists/liked",
     auth: true,
   },
   {
