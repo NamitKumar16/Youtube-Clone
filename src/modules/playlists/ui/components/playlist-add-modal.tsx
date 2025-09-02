@@ -1,6 +1,7 @@
 import { InfiniteScroll } from "@/components/infinite-scroll";
 import { ResponsiveModal } from "@/components/responsive-dialog";
 import { Button } from "@/components/ui/button";
+import { DEFAULT_LIMIT } from "@/constants";
 import { trpc } from "@/trpc/client";
 import { Loader2Icon, SquareCheckIcon, SquareIcon } from "lucide-react";
 
@@ -23,7 +24,7 @@ export const PlaylistAddModal = ({
     fetchNextPage,
   } = trpc.playlists.getManyForVideo.useInfiniteQuery(
     {
-      limit: 10,
+      limit: DEFAULT_LIMIT,
       videoId,
     },
     {
@@ -48,30 +49,28 @@ export const PlaylistAddModal = ({
           playlists?.pages
             .flatMap((page) => page.items)
             .map((playlist) => (
-              <div key={playlist.id}>
-                <Button
-                  key={playlist.id}
-                  variant="ghost"
-                  className="w-full justify-start px-2 [&_svg]:size-5"
-                  size="lg"
-                >
-                  {playlist.containsVideo ? (
-                    <SquareCheckIcon className="mr-2" />
-                  ) : (
-                    <SquareIcon className="mr-2" />
-                  )}
-                  {playlist.name}
-                </Button>
-                {!isLoading && (
-                  <InfiniteScroll
-                    hasNextPage={hasNextPage}
-                    isFetchingNextPage={isFetchingNextPage}
-                    fetchNextPage={fetchNextPage}
-                    isManual
-                  />
+              <Button
+                key={playlist.id}
+                variant="ghost"
+                className="w-full justify-start px-2 [&_svg]:size-5"
+                size="lg"
+              >
+                {playlist.containsVideo ? (
+                  <SquareCheckIcon className="mr-2" />
+                ) : (
+                  <SquareIcon className="mr-2" />
                 )}
-              </div>
+                {playlist.name}
+              </Button>
             ))}
+        {!isLoading && (
+          <InfiniteScroll
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            fetchNextPage={fetchNextPage}
+            isManual
+          />
+        )}
       </div>
     </ResponsiveModal>
   );
