@@ -20,6 +20,12 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
+const getVisibilityIcon = (visibility: string | null | undefined) => {
+  if (visibility === "private") return <LockIcon className="size-4 mr-2" />;
+  if (visibility === "unlisted") return <Link2 className="size-4 mr-2" />;
+  return <Globe2Icon className="size-4 mr-2" />;
+};
+
 export const VideosSection = () => {
   return (
     <Suspense fallback={<VideosSectionSkeleton />}>
@@ -140,13 +146,7 @@ const VideosSectionSuspense = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center">
-                        {video.visibility === "private" ? (
-                          <LockIcon className="size-4 mr-2" />
-                        ) : video.visibility === "unlisted" ? (
-                          <Link2 className="size-4 mr-2" />
-                        ) : (
-                          <Globe2Icon className="size-4 mr-2" />
-                        )}
+                        {getVisibilityIcon(video.visibility)}
                         {snakeCaseToTitle(video.visibility || "error")}
                       </div>
                     </TableCell>
@@ -158,12 +158,14 @@ const VideosSectionSuspense = () => {
                     <TableCell className="text-sm truncate">
                       {format(new Date(video.createdAt), "d MMM yyyy")}
                     </TableCell>
-                    <TableCell className="text-right text-sm">views</TableCell>
                     <TableCell className="text-right text-sm">
-                      comments
+                      {video.viewCount}
+                    </TableCell>
+                    <TableCell className="text-right text-sm">
+                      {video.commentCount}
                     </TableCell>
                     <TableCell className="text-right text-sm pr-6">
-                      likes
+                      {video.likeCount}
                     </TableCell>
                   </TableRow>
                 </Link>
