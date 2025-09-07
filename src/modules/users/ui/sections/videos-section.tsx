@@ -10,23 +10,23 @@ import { trpc } from "@/trpc/client";
 import React, { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-interface HomeVideosSectionProps {
-  categoryId?: string;
+interface VideosSectionProps {
+  userId: string;
 }
 
-const HomeVideosSection = (props: HomeVideosSectionProps) => {
+const VideosSection = (props: VideosSectionProps) => {
   return (
-    <Suspense fallback={<HomeVideosSectionSkeleton />} key={props.categoryId}>
+    <Suspense fallback={<VideosSectionSkeleton />}>
       <ErrorBoundary fallback={<p>Error...</p>}>
-        <HomeVideosSectionSuspense {...props} />
+        <VideosSectionSuspense {...props} />
       </ErrorBoundary>
     </Suspense>
   );
 };
 
-const HomeVideosSectionSkeleton = () => {
+const VideosSectionSkeleton = () => {
   return (
-    <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 [@media(min-width:1920px)]:grid-cols-5 [@media(min-width:2200)]:grid-cols-6">
+    <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
       {Array.from({ length: 10 }, (_, index) => (
         <VideoGridCardSkeleton key={`skeleton-${index}`} />
       ))}
@@ -34,10 +34,10 @@ const HomeVideosSectionSkeleton = () => {
   );
 };
 
-const HomeVideosSectionSuspense = ({ categoryId }: HomeVideosSectionProps) => {
+const VideosSectionSuspense = ({ userId }: VideosSectionProps) => {
   const [videos, query] = trpc.videos.getMany.useSuspenseInfiniteQuery(
     {
-      categoryId,
+      userId,
       limit: DEFAULT_LIMIT,
     },
     {
@@ -46,7 +46,7 @@ const HomeVideosSectionSuspense = ({ categoryId }: HomeVideosSectionProps) => {
   );
   return (
     <div>
-      <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 [@media(min-width:1920px)]:grid-cols-5 [@media(min-width:2200)]:grid-cols-6">
+      <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
         {videos.pages
           .flatMap((page) => page.items)
           .map((video) => (
@@ -62,4 +62,4 @@ const HomeVideosSectionSuspense = ({ categoryId }: HomeVideosSectionProps) => {
   );
 };
 
-export default HomeVideosSection;
+export default VideosSection;

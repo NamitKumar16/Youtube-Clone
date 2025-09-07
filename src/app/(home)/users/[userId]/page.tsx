@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT } from "@/constants";
 import UserView from "@/modules/users/ui/views/user-view";
 import { HydrateClient, trpc } from "@/trpc/server";
 
@@ -10,6 +11,7 @@ interface PageProps {
 const Page = async ({ params }: PageProps) => {
   const { userId } = await params;
   trpc.users.getOne.prefetch({ id: userId });
+  trpc.videos.getMany.prefetchInfinite({ userId, limit: DEFAULT_LIMIT });
   return (
     <HydrateClient>
       <UserView userId={userId} />

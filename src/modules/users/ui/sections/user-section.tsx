@@ -3,16 +3,26 @@
 import { trpc } from "@/trpc/client";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import UserPageBanner from "../components/user-page-banner";
-import { Skeleton } from "@/components/ui/skeleton";
-import UserPageInfo from "../components/user-page-info";
+import UserPageBanner, {
+  UserPageBannerSkeleton,
+} from "../components/user-page-banner";
+import UserPageInfo, {
+  UserPageInfoSkeleton,
+} from "../components/user-page-info";
+import { Separator } from "@/components/ui/separator";
 
 interface UserSectionProps {
   userId: string;
 }
 
 const UserSectionSkeleton = () => {
-  return <Skeleton className="w-full max-h-[200px] h-[15vh] md:h-[25vh]" />;
+  return (
+    <div className="flex flex-col">
+      <UserPageBannerSkeleton />
+      <UserPageInfoSkeleton />
+      <Separator />
+    </div>
+  );
 };
 const UserSectionSuspense = ({ userId }: UserSectionProps) => {
   const [user] = trpc.users.getOne.useSuspenseQuery({ id: userId });
@@ -21,6 +31,7 @@ const UserSectionSuspense = ({ userId }: UserSectionProps) => {
     <div className="flex flex-col">
       <UserPageBanner user={user} />
       <UserPageInfo user={user} />
+      <Separator />
     </div>
   );
 };

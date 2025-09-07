@@ -5,10 +5,37 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import SubscriptionButton from "@/modules/subscriptions/ui/components/subscription-button";
 import { useSubscription } from "@/modules/subscriptions/hooks/use-subscription";
+import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface UserPageInfoProps {
   user: UserGetOneOutput;
 }
+
+export const UserPageInfoSkeleton = () => {
+  return (
+    <div className="py-6">
+      <div className="flex flex-col md:hidden">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-[60px] w-[60px] rounded-full" />
+          <div className="flex-1 min-w-0">
+            <Skeleton className="h-6 w-32" />
+            <Skeleton className="h-4 w-48 mt-1" />
+          </div>
+        </div>
+        <Skeleton className="h-10 w-full mt-3 rounded-full" />
+      </div>
+      <div className="hidden md:flex items-start gap-4">
+        <Skeleton className="h-[160px] w-[160px] rounded-full" />
+        <div className="flex-1 min-w-0">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-5 w-48 mt-4" />
+          <Skeleton className="h-10 w-32 mt-3 rounded-full" />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const UserPageInfo = ({ user }: UserPageInfoProps) => {
   const { userId, isLoaded } = useAuth();
@@ -50,7 +77,11 @@ const UserPageInfo = ({ user }: UserPageInfoProps) => {
           </div>
         </div>
         {clerkId === userId ? (
-          <Button variant="secondary" asChild className="rounded-full mt-3">
+          <Button
+            variant="secondary"
+            asChild
+            className="rounded-full mt-3 w-full"
+          >
             <Link href="/studio">Go to Studio</Link>
           </Button>
         ) : (
@@ -61,6 +92,42 @@ const UserPageInfo = ({ user }: UserPageInfoProps) => {
             className="mt-3 w-full"
           />
         )}
+      </div>
+      <div className="hidden md:flex items-start gap-4">
+        <UserAvatar
+          size="xl"
+          imageUrl={imageUrl}
+          name={name}
+          className={cn(
+            userId === clerkId &&
+              "hover:opacity-80 transition-opacity cursor-pointer duration-300"
+          )}
+          onClick={() => {
+            if (user.clerkId === userId) {
+              clerk.openUserProfile();
+            }
+          }}
+        />
+        <div className="flex-1 min-w-0">
+          <h1 className="text-4xl font-bold">{name}</h1>
+          <div className="flex items-center gap-1 text-s text-muted-foreground mt-3">
+            <span>{subscriberCount} subscribers</span>
+            <span>&bull;</span>
+            <span>{videoCount} videos</span>
+          </div>
+          {clerkId === userId ? (
+            <Button variant="secondary" asChild className="rounded-full mt-3">
+              <Link href="/studio">Go to Studio</Link>
+            </Button>
+          ) : (
+            <SubscriptionButton
+              disabled={isPending || !isLoaded}
+              isSubscribed={viewerSubscribed}
+              onClick={onClick}
+              className="mt-3"
+            />
+          )}
+        </div>
       </div>
     </div>
   );
