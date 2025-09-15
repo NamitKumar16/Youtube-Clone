@@ -47,9 +47,7 @@ export const ThumbnailGenerateModal = ({
 
   const generateThumbnail = trpc.videos.generateThumbnail.useMutation({
     onSuccess: () => {
-      toast.success("Job Started", {
-        description: "This may take a few minutes",
-      });
+      toast.success("Job Started - This may take a few minutes");
       form.reset();
       onOpenChange(false);
     },

@@ -190,9 +190,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
   const generateTitle = trpc.videos.generateTitle.useMutation({
     onSuccess: () => {
-      toast.success("Job Started", {
-        description: "This may take a few minutes",
-      });
+      toast.success("Job Started - This may take a few minutes");
     },
     onError: () => {
       toast.error("Something went wrong");
@@ -201,9 +199,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
   const generateDescription = trpc.videos.generateDescription.useMutation({
     onSuccess: () => {
-      toast.success("Job Started", {
-        description: "This may take a few minutes",
-      });
+      toast.success("Job Started - This may take a few minutes");
     },
     onError: () => {
       toast.error("Something went wrong");
