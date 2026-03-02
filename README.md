@@ -178,51 +178,49 @@ Videos → PlaylistVideos (many:many)
    bun install
    ```
 
-````
-
 2. **Environment Configuration**
 
    ```bash
    cp .env.example .env.local
-````
+   ```
 
-Configure your environment variables:
+3. Configure your environment variables:
 
-```env
-# Database
-DATABASE_URL="postgresql://..."
+   ```env
+   # Database
+   DATABASE_URL="postgresql://..."
 
-# Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=""
-CLERK_SECRET_KEY=""
+   # Authentication
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=""
+   CLERK_SECRET_KEY=""
 
-# Video Streaming
-MUX_TOKEN_ID=""
-MUX_TOKEN_SECRET=""
-MUX_WEBHOOK_SECRET=""
+   # Video Streaming
+   MUX_TOKEN_ID=""
+   MUX_TOKEN_SECRET=""
+   MUX_WEBHOOK_SECRET=""
 
-# AI Services
-OPENAI_API_KEY=""
-OR_API_KEY=""
-NEBIUS_API_KEY=""
+   # AI Services
+   OPENAI_API_KEY=""
+   OR_API_KEY=""
+   NEBIUS_API_KEY=""
 
-# File Upload
-UPLOADTHING_SECRET=""
-UPLOADTHING_APP_ID=""
+   # File Upload
+   UPLOADTHING_SECRET=""
+   UPLOADTHING_APP_ID=""
 
-# Rate Limiting
-UPSTASH_REDIS_REST_URL=""
-UPSTASH_REDIS_REST_TOKEN=""
-```
+   # Rate Limiting
+   UPSTASH_REDIS_REST_URL=""
+   UPSTASH_REDIS_REST_TOKEN=""
+   ```
 
-3. **Database Setup**
+4. **Database Setup**
 
    ```bash
    bun run db:push
    bun run db:seed
    ```
 
-4. **Start Development**
+5. **Start Development**
    ```bash
    bun run dev
    ```
