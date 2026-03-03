@@ -3,7 +3,6 @@ import { videos } from "@/db/schema";
 import { serve } from "@upstash/workflow/nextjs";
 import { and, eq } from "drizzle-orm";
 import { UTApi } from "uploadthing/server";
-import OpenAI from "openai";
 interface InputType {
   userId: string;
   videoId: string;
@@ -28,25 +27,22 @@ export const { POST } = serve(async (context) => {
     return existingVideo;
   });
 
-  const client = new OpenAI({
-    baseURL: "https://api.studio.nebius.com/v1/",
-    apiKey: process.env.NEBIUS_API_KEY!,
+  const workerResponse = await fetch(process.env.CF_WORKER_URL!, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.CF_WORKER_API_KEY}`,
+    },
+    body: JSON.stringify({ prompt }),
   });
 
-  const response = await client.images.generate({
-    model: "black-forest-labs/flux-schnell",
-    prompt,
-    extra_body: {
-      width: 1792,
-      height: 1024,
-    },
-  } as unknown as Parameters<typeof client.images.generate>[0]);
-
-  if (!response.data?.[0]?.url) {
-    throw new Error("Thumbnail generation failed (no URL returned)");
+  if (!workerResponse.ok) {
+    const errorText = await workerResponse.text();
+    console.error("Cloudflare Worker error:", errorText);
+    throw new Error("Thumbnail generation failed");
   }
 
-  const tempThumbnailUrl = response?.data[0]?.url;
+  const imageBuffer = await workerResponse.arrayBuffer();
   await context.run("cleanup-thumbnail", async () => {
     if (video.thumbnailKey) {
       await utapi.deleteFiles(video.thumbnailKey);
@@ -61,13 +57,20 @@ export const { POST } = serve(async (context) => {
   });
 
   const uploadedThumbnail = await context.run("upload-thumbnail", async () => {
-    const { data } = await utapi.uploadFilesFromUrl(tempThumbnailUrl);
+    const blob = new Blob([imageBuffer], { type: "image/png" });
 
-    if (!data) {
-      throw new Error("Bad request");
+    // Cast to File-like object
+    const file = Object.assign(blob, {
+      name: `thumbnail-${videoId}.png`,
+    });
+
+    const result = await utapi.uploadFiles(file);
+
+    if (!result?.data) {
+      throw new Error("Upload failed");
     }
 
-    return data;
+    return result.data;
   });
 
   await context.run("update-video", async () => {

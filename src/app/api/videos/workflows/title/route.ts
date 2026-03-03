@@ -59,7 +59,7 @@ export const { POST } = serve(async (context) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "mistralai/mistral-7b-instruct:free",
+        model: "nvidia/nemotron-3-nano-30b-a3b:free",
         messages: [
           {
             role: "system",
@@ -71,11 +71,11 @@ export const { POST } = serve(async (context) => {
           },
         ],
       }),
-    }
+    },
   );
 
   if (!openRouterResponse.ok) {
-    throw new Error("Failed to get title from OpenRouter");
+     throw new Error("Failed to get title from OpenRouter");
   }
 
   const responseJson = await openRouterResponse.json();
@@ -93,7 +93,7 @@ export const { POST } = serve(async (context) => {
         title: title || video.title,
       })
       .where(
-        and(eq(videos.id, (await video).id), eq(videos.userId, video.userId))
+        and(eq(videos.id, (await video).id), eq(videos.userId, video.userId)),
       );
   });
 });
