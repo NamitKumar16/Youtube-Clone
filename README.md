@@ -29,7 +29,7 @@
 ### 🤖 **AI-Powered Innovation**
 
 - **4 AI Features**: Title generation, descriptions, thumbnails, and transcript analysis
-- **Multi-Model Integration**: OpenAI, Mistral AI, and Flux AI models
+- **Multi-Model Integration**: OpenRouter and Cloudflare Workers AI
 - **Workflow Automation**: Serverless AI processing with Upstash Workflows
 - **Smart Content**: Automatic SEO-optimized titles and compelling descriptions
 
@@ -63,7 +63,7 @@
 
 - **Auto-Generated Titles**: AI creates compelling, SEO-optimized video titles from transcripts
 - **Smart Descriptions**: Automatic video descriptions from transcript analysis
-- **AI Thumbnail Generation**: Custom thumbnail creation using Flux AI model
+- **AI Thumbnail Generation**: Custom thumbnail creation using Cloudflare Workers AI (Stable Diffusion XL)
 - **Transcript Processing**: Automatic transcript extraction and intelligent analysis
 
 ### 👥 **Comprehensive User Experience**
@@ -119,8 +119,8 @@
 ### 🎥 **Media & AI Integration**
 
 - **Mux** - Professional video streaming infrastructure with global CDN
-- **OpenAI API** - AI-powered content generation and analysis
-- **Flux AI** - Advanced image generation for custom thumbnails
+- **OpenRouter API** - AI-powered content generation and analysis
+- **Cloudflare Workers AI** - Stable Diffusion XL for thumbnail generation
 - **Upstash Workflows** - Serverless automation for AI processing
 - **UploadThing** - Secure file upload and management system
 
@@ -130,6 +130,7 @@
 - **Environment Management** - Secure configuration handling
 - **Performance Monitoring** - Real-time analytics and error tracking
 - **Error Handling** - Comprehensive error boundaries and fallbacks
+- **Cloudflare Workers** - Serverless AI image generation infrastructure
 
 ---
 
@@ -200,9 +201,9 @@ Videos → PlaylistVideos (many:many)
    MUX_WEBHOOK_SECRET=""
 
    # AI Services
-   OPENAI_API_KEY=""
    OR_API_KEY=""
-   NEBIUS_API_KEY=""
+   CF_WORKER_URL=""
+   CF_WORKER_API_KEY=""
 
    # File Upload
    UPLOADTHING_SECRET=""
@@ -258,9 +259,10 @@ src/
 ### 🤖 **AI Workflow Automation**
 
 - **Serverless Processing**: AI tasks run asynchronously using Upstash Workflows
-- **Multi-Model Integration**: Seamless switching between different AI providers
+- **Multi-Model Integration**: OpenRouter (LLMs) and Cloudflare Workers AI (Stable Diffusion XL)
 - **Error Handling**: Robust error handling and retry mechanisms
 - **Cost Optimization**: Efficient API usage with intelligent caching
+- **Custom AI Infrastructure**: Self-hosted image generation via Cloudflare Workers
 
 ### ⚡ **Performance Optimizations**
 
@@ -330,7 +332,8 @@ bun run lint             # Run ESLint
 - **Mux** - Professional video infrastructure
 - **Clerk** - Authentication and user management
 - **Vercel** - Deployment and hosting platform
-- **OpenRouter & Nebius Studio** - AI-powered content generation
+- **OpenRouter** - AI-powered content generation
+- **Cloudflare Workers AI** - AI thumbnail generation infrastructure
 - **Radix UI** - Accessible component primitives
 
 ---
